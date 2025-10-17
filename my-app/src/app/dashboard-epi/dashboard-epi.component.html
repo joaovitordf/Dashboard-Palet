@@ -6,12 +6,16 @@
     <!-- VÍDEO -->
     <div class="col-12 col-lg-4">
       <div class="card h-100">
-        <div class="card-header d-flex align-items-center">
-          <span class="me-auto">Rastreamento ao vivo</span>
-          <label class="me-2 mb-0">Escolha a câmera:</label>
-          <select class="form-select form-select-sm w-auto" [(ngModel)]="stream.id" (ngModelChange)="changeCamera($event)">
-            <option *ngFor="let cam of cameras" [value]="cam.id">{{ cam.name }}</option>
-          </select>
+        <div class="card-header flex-column align-items-start">
+          <div class="d-flex align-items-center mb-2">
+            <label class="me-2 mb-0">Escolha a câmera:</label>
+            <select class="form-select form-select-sm w-auto"
+                    [(ngModel)]="stream.id"
+                    (ngModelChange)="changeCamera($event)">
+              <option *ngFor="let cam of cameras" [value]="cam.id">{{ cam.name }}</option>
+            </select>
+          </div>
+          <span class="fw-semibold">Rastreamento ao vivo</span>
         </div>
         <div class="card-body p-2">
           <div class="ratio ratio-16x9 bg-dark rounded overflow-hidden">

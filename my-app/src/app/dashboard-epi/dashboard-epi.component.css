@@ -43,6 +43,15 @@
 /* inputs não estourarem a linha */
 .container-fluid{ overflow-x: hidden; }
 
+.card-header label {
+  font-weight: 600;
+  color: #0b4f6c;
+  margin-bottom: 0;
+  margin-right: 6px;
+  font-size: 0.95rem;
+}
+
+
 /* breakpoints: se quiser encolher mais em telas bem pequenas */
 @media (max-width: 768px){
   :root{
