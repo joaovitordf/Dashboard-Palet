@@ -1,0 +1,152 @@
+<div class="container-fluid">
+  <br />
+
+  <!-- ========== ROW 1: VÍDEO + CARDS (gauge, pizza, conformidade) ========== -->
+  <div class="row g-3 align-items-stretch">
+    <!-- VÍDEO -->
+    <div class="col-12 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header d-flex align-items-center">
+          <span class="me-auto">Rastreamento ao vivo</span>
+          <label class="me-2 mb-0">Escolha a câmera:</label>
+          <select class="form-select form-select-sm w-auto" [(ngModel)]="stream.id" (ngModelChange)="changeCamera($event)">
+            <option *ngFor="let cam of cameras" [value]="cam.id">{{ cam.name }}</option>
+          </select>
+        </div>
+        <div class="card-body p-2">
+          <div class="ratio ratio-16x9 bg-dark rounded overflow-hidden">
+            <video
+              #videoElLive
+              class="position-absolute top-0 start-0 w-100 h-100"
+              playsinline
+              muted
+              controls
+              [src]="stream.url"
+              poster="{{ poster || '' }}"
+              (error)="onVideoError($event)"
+              style="object-fit: contain;">
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARDS À DIREITA DO VÍDEO -->
+    <div class="col-12 col-lg-8">
+      <div class="row g-3">
+        <!-- Gauge -->
+        <div class="col-12 col-md-4">
+          <div class="card h-100">
+            <div class="card-header">Desvios de EPIs</div>
+            <div class="card-body d-flex justify-content-center align-items-center top-chart-box">
+              <canvas #canvasDesvios class="top-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pizza -->
+        <div class="col-12 col-md-4">
+          <div class="card h-100">
+            <div class="card-header">Comparativo Mensal (3 meses)</div>
+            <div class="card-body d-flex justify-content-center align-items-center top-chart-box">
+              <canvas #pieCanvasComparativo class="top-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conformidade (compacto no topo) -->
+        <div class="col-12 col-md-4">
+          <div class="card h-100">
+            <div class="card-header d-flex align-items-center flex-wrap gap-2">
+              <span class="me-auto">Conformidade (30 dias)</span>
+              <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.compliance.start">
+              <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.compliance.end">
+            </div>
+            <div class="card-body d-flex justify-content-center align-items-center top-chart-box">
+              <canvas #chartCanvasCompliance class="top-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ROW 2: 3 BARRAS IGUAIS ========== -->
+  <div class="row g-3 align-items-stretch three-bars-row mt-1">
+    <!-- Alertas por EPI/Obra -->
+    <div class="col-12 col-xl-4">
+      <div class="card h-100">
+        <div class="card-header d-flex align-items-center flex-wrap gap-2">
+          <span class="me-auto">Alertas por EPI e Obra</span>
+          <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.alerts.start">
+          <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.alerts.end">
+          <div class="btn-group ms-1">
+            <button class="btn btn-sm btn-outline-danger" (click)="exportChartAsPdf('alerts','Alertas por EPI e Obra')" title="PDF">
+              <i class="bi bi-file-earmark-pdf"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-success" (click)="exportChartAsCsv('alerts','alertas_por_epi.csv')" title="CSV">
+              <i class="bi bi-filetype-xlsx"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center bar-box">
+          <canvas #chartCanvasAlerts class="bar-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas Diários -->
+    <div class="col-12 col-xl-4">
+      <div class="card h-100">
+        <div class="card-header d-flex align-items-center flex-wrap gap-2">
+          <span class="me-auto">Alertas Diários (7 dias)</span>
+          <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.daily.start">
+          <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.daily.end">
+          <div class="btn-group ms-1">
+            <button class="btn btn-sm btn-outline-danger" (click)="exportChartAsPdf('daily','Alertas Diários')" title="PDF">
+              <i class="bi bi-file-earmark-pdf"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-success" (click)="exportChartAsCsv('daily','alertas_diarios.csv')" title="CSV">
+              <i class="bi bi-filetype-xlsx"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body d-flex justify-content-center align-items-center bar-box">
+          <canvas #chartCanvasDaily class="bar-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ranking -->
+    <div class="col-12 col-xl-4">
+      <div class="card h-100">
+        <div class="card-header d-flex align-items-center flex-wrap gap-2">
+          <span class="me-auto">Ranking de Obras com Mais Desvios</span>
+          <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.ranking.start">
+          <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.ranking.end">
+          <div class="btn-group ms-1">
+            <button class="btn btn-sm btn-outline-danger" (click)="exportChartAsPdf('ranking','Ranking de Desvios')" title="PDF">
+              <i class="bi bi-file-earmark-pdf"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-success" (click)="exportChartAsCsv('ranking','ranking_desvios.csv')" title="CSV">
+              <i class="bi bi-filetype-xlsx"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body pt-0 d-flex flex-column bar-box">
+          <div class="legend">
+            <span class="legend-item"><span class="dot dot-total"></span> Total</span>
+            <span class="legend-item"><span class="dot dot-cap"></span> Capacete</span>
+            <span class="legend-item"><span class="dot dot-colete"></span> Colete</span>
+            <span class="legend-item"><span class="dot dot-luva"></span> Luva</span>
+            <span class="legend-item"><span class="dot dot-bota"></span> Bota</span>
+          </div>
+          <div class="flex-fill d-flex justify-content-center align-items-center">
+            <canvas #chartRanking class="bar-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
