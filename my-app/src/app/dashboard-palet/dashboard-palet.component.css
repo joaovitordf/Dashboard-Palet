@@ -1,0 +1,56 @@
+.donut-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.donut-size {
+  width: var(--donut-size);
+  height: var(--donut-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-overlay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  max-width: calc(100% - 16px);
+}
+
+.donut-legend-item {
+  background: rgba(255,255,255,0.98);
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
+
+.donut-legend-dot {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.small-date {
+  max-width: 140px;
+  padding: 0.25rem 0.375rem;
+}
+
+.card-header {
+  padding: 0.75rem 1rem;
+}
+
+.card-header .btn-group .btn {
+  padding: 0.25rem 0.5rem;
+}

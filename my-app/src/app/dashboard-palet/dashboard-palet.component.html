@@ -1,1 +1,305 @@
-<p>dashboard-palet works!</p>
+<div class="container-fluid">
+    <br />
+
+    <!-- ========== ROW 1 (Camera | Carregamentos Realizados | Carregamento Caminhão) ========== -->
+    <div class="row g-3 align-items-stretch">
+        <!-- Camera -->
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header title-row d-flex flex-column align-items-start">
+                    <div class="d-flex align-items-center mb-2 w-100">
+                        <label class="me-2 mb-0">Escolha a câmera:</label>
+                        <select class="form-select form-select-sm w-auto" [(ngModel)]="stream.id"
+                            (ngModelChange)="changeCamera($event)">
+                            <option *ngFor="let cam of cameras" [value]="cam.id">
+                                {{ cam.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <span class="fw-semibold">Rastreamento ao vivo</span>
+                </div>
+
+                <div class="card-body p-2 d-flex flex-column justify-content-center">
+                    <div class="ratio ratio-16x9 bg-dark rounded overflow-hidden">
+                        <video #videoElLive class="position-absolute top-0 start-0 w-100 h-100" playsinline muted
+                            controls [src]="stream.url" [poster]="poster || ''" (error)="onVideoError($event)"></video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carregamentos Realizados -->
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header title-row">
+                    <div class="d-flex flex-column w-100">
+                        <span class="fw-semibold mb-1">Carregamentos Realizados</span>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                            <div class="d-flex align-items-center gap-1">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.top.start">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.top.end">
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="exportChartAsPdf('loads','Carregamentos Realizados')" title="PDF">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success"
+                                    (click)="exportChartAsCsv('loads','carregamentos_realizados.csv')" title="CSV">
+                                    <i class="bi bi-filetype-xlsx"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="donut-wrapper">
+                        <div class="donut-overlay">
+                            <div *ngFor="let item of loadsData"
+                                class="donut-legend-item d-flex align-items-center gap-2">
+                                <span class="donut-legend-dot" [style.background]="item.color"></span>
+                                <small class="text-muted">{{ item.label }} — {{ item.pct }}%</small>
+                            </div>
+                        </div>
+                        <div class="donut-size">
+                            <canvas #pieCanvasLoads class="donut-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carregamento Caminhão -->
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header title-row">
+                    <div class="d-flex flex-column w-100">
+                        <div class="fw-semibold mb-1">
+                            Carregamento Caminhão<br>
+                            <small class="text-muted">Placa {{ truckPlate || 'OK0065' }}</small>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                            <div class="d-flex align-items-center gap-1">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.truck.start">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.truck.end">
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="exportChartAsPdf('truck','Carregamento Caminhão')" title="PDF">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success"
+                                    (click)="exportChartAsCsv('truck','carregamento_caminhao.csv')" title="CSV">
+                                    <i class="bi bi-filetype-xlsx"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body d-flex flex-column align-items-center justify-content-center text-center p-3">
+                    <div class="donut-wrapper">
+                        <div class="donut-overlay">
+                            <div *ngFor="let item of loadsData"
+                                class="donut-legend-item d-flex align-items-center gap-2">
+                                <span class="donut-legend-dot" [style.background]="item.color"></span>
+                                <small class="text-muted">{{ item.label }} — {{ item.pct }}%</small>
+                            </div>
+                        </div>
+                        <div class="donut-size">
+                            <canvas #pieCanvasTruck class="donut-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ROW 2 (Produto Palete | Carregamento por Hora | Contagem por Palete) ========== -->
+    <div class="row g-3 align-items-stretch mt-1">
+        <!-- Produto Palete LP143 -->
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header title-row">
+                    <div class="d-flex flex-column w-100">
+                        <span class="fw-semibold mb-1">Quantidade por produto do palete LP143</span>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                            <div class="d-flex align-items-center gap-1">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.products.start">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.products.end">
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="exportChartAsPdf('products','Quantidade por produto')">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success"
+                                    (click)="exportChartAsCsv('products','quantidade_produtos.csv')">
+                                    <i class="bi bi-filetype-xlsx"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <div class="d-flex flex-wrap gap-2 mb-2 align-items-center">
+                        <div *ngFor="let lg of productLegend" class="d-flex align-items-center gap-2">
+                            <span [style.background]="lg.color"
+                                style="width:14px;height:14px;display:inline-block;border-radius:3px;"></span>
+                            <small class="fw-semibold text-truncate">{{ lg.label }} <span class="text-muted">({{ lg.pct
+                                    }}%)</span></small>
+                        </div>
+                    </div>
+                    <div class="w-100 d-flex rounded overflow-hidden" style="height:88px;">
+                        <div *ngFor="let seg of productSegments" [style.flex]="seg.value" [style.background]="seg.color"
+                            class="d-flex align-items-center justify-content-center px-2">
+                            <small class="fw-semibold text-truncate"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carregamento de paletes por hora -->
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header title-row">
+                    <div class="d-flex flex-column w-100">
+                        <span class="fw-semibold mb-1">Carregamento de paletes por hora</span>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                            <div class="d-flex align-items-center gap-1">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.palletsHour.start">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.palletsHour.end">
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="exportChartAsPdf('palletsHour','Carregamento de paletes por hora')"
+                                    title="PDF"><i class="bi bi-file-earmark-pdf"></i></button>
+                                <button class="btn btn-sm btn-outline-success"
+                                    (click)="exportChartAsCsv('palletsHour','carregamento_paletes_por_hora.csv')"
+                                    title="CSV"><i class="bi bi-filetype-xlsx"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2 d-flex flex-wrap align-items-center gap-3">
+                        <div *ngFor="let lg of palletsHourLegend" class="d-flex align-items-center gap-2">
+                            <span [style.background]="lg.color" class="d-inline-block rounded-circle"
+                                style="width:10px;height:10px;"></span>
+                            <small class="small text-muted">{{ lg.label }}</small>
+                        </div>
+                    </div>
+                    <div class="position-relative">
+                        <canvas #palletsHourCanvas class="w-100"></canvas>
+                    </div>
+                    <div class="mt-2 text-center small text-muted">Quantidade de paletes carregadas por hora</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contagem total de produtos por palete por hora -->
+        <div class="col-12 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header title-row">
+                    <div class="d-flex flex-column w-100">
+                        <span class="fw-semibold mb-1">Contagem total de produtos por palete por hora</span>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+                            <div class="d-flex align-items-center gap-1">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.pallets.start">
+                                <input type="date" class="form-control form-control-sm small-date"
+                                    [(ngModel)]="filters.pallets.end">
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="exportChartAsPdf('pallets','Contagem total de produtos por palete por hora')">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success"
+                                    (click)="exportChartAsCsv('pallets','contagem_produtos_por_palete.csv')">
+                                    <i class="bi bi-filetype-xlsx"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <div class="d-flex mb-3 align-items-center gap-3">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <div *ngFor="let lg of productLegend" class="d-flex align-items-center gap-2 me-2">
+                                <span [style.background]="lg.color" class="d-inline-block"
+                                    style="width:12px;height:12px;border-radius:3px;"></span>
+                                <small class="text-muted">{{ lg.label }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-relative">
+                        <canvas #stackedBarCanvas class="w-100"></canvas>
+                    </div>
+                    <div class="mt-2 text-center small text-muted">Quantidade de produtos por unidade</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ROW 3 ========== -->
+    <div class="row g-3 align-items-stretch mt-1">
+        <!-- Tempo gasto para carregamento por veículo/dia -->
+        <div class="col-12">
+            <div class="card h-100">
+                <div class="card-header d-flex flex-column align-items-start">
+                    <span class="fw-semibold mb-2">Tempo gasto para carregamento por veículo/dia</span>
+
+                    <div class="d-flex align-items-center gap-1 w-100">
+                        <input type="date" class="form-control form-control-sm small-date"
+                            [(ngModel)]="filters.time.start" />
+                        <input type="date" class="form-control form-control-sm small-date"
+                            [(ngModel)]="filters.time.end" />
+
+                        <div class="btn-group ms-2">
+                            <button class="btn btn-sm btn-outline-danger"
+                                (click)="exportChartAsPdf('truckTime','Tempo gasto para carregamento por veículo/dia')"
+                                title="PDF">
+                                <i class="bi bi-file-earmark-pdf"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-success"
+                                (click)="exportChartAsCsv('truckTime','tempo_gasto_por_veiculo.csv')" title="CSV">
+                                <i class="bi bi-filetype-xlsx"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="chart-container" style="position: relative; height: 350px;">
+                        <canvas #truckTimeCanvas></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

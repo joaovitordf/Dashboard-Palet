@@ -30,9 +30,9 @@ export class DashboardEpiComponent implements AfterViewInit, OnDestroy {
   autoplay = true;
 
   cameras = [
-    { id: 'video1', name: 'Câmera Entrada', url: 'http://streamserver.sensoreng.com.br:8888/cury/camera01/index.m3u8', serial: 'ENT-0001', model: 'AC10', status: 'ONLINE', poster: 'assets/posters/entrada.jpg' },
-    { id: 'video2', name: 'Câmera MV/Planta1', url: 'http://streamserver.sensoreng.com.br:8888/cury/camera01/index.m3u8', serial: '234892/2423MV90', model: 'AC20HIKVision', status: 'ONLINE', poster: 'assets/posters/planta1.jpg' },
-    { id: 'video3', name: 'Câmera Saída', url: 'http://streamserver.sensoreng.com.br:8888/cury/camera01/index.m3u8', serial: 'SAI-0099', model: 'AC30', status: 'OFFLINE', poster: 'assets/posters/saida.jpg' }
+    { id: 'video1', name: 'Câmera Entrada', url: 'http://streamserver.sensoreng.com.br:8888/cury/camera01/index.m3u8' },
+    { id: 'video2', name: 'Câmera MV/Planta1', url: 'http://streamserver.sensoreng.com.br:8888/cury/camera01/index.m3u8' },
+    { id: 'video3', name: 'Câmera Saída', url: 'http://streamserver.sensoreng.com.br:8888/cury/camera01/index.m3u8' }
   ];
 
   stream = { id: this.cameras[1].id, url: this.cameras[1].url };
@@ -100,15 +100,9 @@ export class DashboardEpiComponent implements AfterViewInit, OnDestroy {
     const cam = this.cameras.find(c => c.id === cameraId);
     if (!cam) return;
     this.stream = { id: cam.id, url: cam.url };
-    // atualiza detalhes exibidos
-    this.name = cam.name ?? this.name;
-    this.serial = cam.serial ?? this.serial;
-    this.model = cam.model ?? this.model;
-    this.status = (cam.status === 'OFFLINE' ? 'OFFLINE' : 'ONLINE');
-    this.poster = cam.poster;
+    this.name = cam.name;
     this.reinitVideo();
   }
-
 
   private reinitVideo() {
     const el = this.videoElLive?.nativeElement;

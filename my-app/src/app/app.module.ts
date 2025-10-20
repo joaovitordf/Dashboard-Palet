@@ -5,9 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardEpiComponent } from './dashboard-epi/dashboard-epi.component';
+import { DashboardPaletComponent } from './dashboard-palet/dashboard-palet.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardEpiComponent],
+  declarations: [AppComponent, DashboardEpiComponent, DashboardPaletComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
