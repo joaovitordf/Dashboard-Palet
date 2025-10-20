@@ -35,6 +35,39 @@
       </div>
     </div>
 
+    <!-- DETALHES DA CÂMERA -->
+    <div class="col-12 col-lg-3">
+      <div class="card h-100">
+        <div class="card-header">
+          <h6 class="mb-0">Detalhes da Câmera</h6>
+        </div>
+        <div class="card-body small p-3">
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2">
+              <div class="fw-semibold">Nome</div>
+              <div class="text-truncate">{{ name }}</div>
+            </li>
+            <li class="mb-2">
+              <div class="fw-semibold">Serial</div>
+              <div class="text-truncate">{{ serial }}</div>
+            </li>
+            <li class="mb-2">
+              <div class="fw-semibold">Modelo</div>
+              <div class="text-truncate">{{ model }}</div>
+            </li>
+            <li class="mb-2 d-flex align-items-center">
+              <div class="fw-semibold me-2">Status</div>
+              <span
+                class="badge"
+                [ngClass]="{'bg-success': status === 'ONLINE', 'bg-secondary': status === 'OFFLINE'}">
+                {{ status }}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <!-- CARDS À DIREITA DO VÍDEO -->
     <div class="col-12 col-lg-8">
       <div class="row g-3">
