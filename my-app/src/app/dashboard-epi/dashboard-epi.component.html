@@ -42,8 +42,8 @@
         <div class="col-12 col-md-4">
           <div class="card h-100">
             <div class="card-header">Desvios de EPIs</div>
-            <div class="card-body d-flex justify-content-center align-items-center top-chart-box">
-              <canvas #canvasDesvios class="top-chart"></canvas>
+            <div class="card-body d-flex justify-content-center align-items-center tile-small">
+              <canvas #canvasDesvios></canvas>
             </div>
           </div>
         </div>
@@ -52,8 +52,8 @@
         <div class="col-12 col-md-4">
           <div class="card h-100">
             <div class="card-header">Comparativo Mensal (3 meses)</div>
-            <div class="card-body d-flex justify-content-center align-items-center top-chart-box">
-              <canvas #pieCanvasComparativo class="top-chart"></canvas>
+            <div class="card-body d-flex justify-content-center align-items-center tile-small">
+              <canvas #pieCanvasComparativo></canvas>
             </div>
           </div>
         </div>
@@ -66,8 +66,8 @@
               <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.compliance.start">
               <input type="date" class="form-control form-control-sm w-auto" [(ngModel)]="filters.compliance.end">
             </div>
-            <div class="card-body d-flex justify-content-center align-items-center top-chart-box">
-              <canvas #chartCanvasCompliance class="top-chart"></canvas>
+            <div class="card-body d-flex justify-content-center align-items-center">
+              <canvas #chartCanvasCompliance></canvas>
             </div>
           </div>
         </div>
@@ -94,7 +94,7 @@
           </div>
         </div>
         <div class="card-body d-flex justify-content-center align-items-center bar-box">
-          <canvas #chartCanvasAlerts class="bar-chart"></canvas>
+          <canvas #chartCanvasAlerts></canvas>
         </div>
       </div>
     </div>
@@ -116,7 +116,7 @@
           </div>
         </div>
         <div class="card-body d-flex justify-content-center align-items-center bar-box">
-          <canvas #chartCanvasDaily class="bar-chart"></canvas>
+          <canvas #chartCanvasDaily></canvas>
         </div>
       </div>
     </div>
@@ -147,7 +147,7 @@
             <span class="legend-item"><span class="dot dot-bota"></span> Bota</span>
           </div>
           <div class="flex-fill d-flex justify-content-center align-items-center">
-            <canvas #chartRanking class="bar-chart"></canvas>
+            <canvas #chartRanking></canvas>
           </div>
         </div>
       </div>

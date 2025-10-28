@@ -1,15 +1,5 @@
-:root{
-  /* alturas menores e responsivas */
-  --top-tile-h: clamp(160px, 26vh, 240px);   /* altura dos 3 cards do topo (gauge, pizza, conformidade) */
-  --bar-h:      clamp(180px, 28vh, 260px);   /* altura dos 3 gráficos de barra embaixo */
-}
-
 /* não força 100% de altura no host (evita somar com navbar) */
 :host{ display:block; }
-
-/* ==== TOPO: gauge/pizza/conformidade ==== */
-.top-chart-box{ width:100%; height: var(--top-tile-h); }
-.top-chart{ width:100% !important; height:100% !important; display:block; }
 
 /* ==== LINHA DE BAIXO: 3 BARRAS IGUAIS ==== */
 .three-bars-row .card{ min-height: 0; }
@@ -19,7 +9,6 @@
   min-height: var(--bar-h);
   display:flex;
 }
-.bar-chart{ width:100% !important; height:100% !important; display:block; }
 
 /* detalhes compactos (se usar em outro lugar) */
 .details{ display:flex; flex-direction:column; gap:6px; }
